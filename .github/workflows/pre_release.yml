@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - dev
+      - test-multiarch
 
 jobs:
   pre-release:
@@ -59,6 +60,7 @@ jobs:
             VCS_REF=${{ github.sha }}
             BUILD_DATE=${{ steps.getDate.outputs.date }}
             VERSION=dev
-          push: true
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+          push: false
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
