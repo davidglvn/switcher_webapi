@@ -25,6 +25,10 @@ jobs:
         id: getDate
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
+      - name: Set up QEMU
+        if: github.event_name != 'pull_request'
+        uses: docker/setup-qemu-action@v1
+
       - name: Get semantic version from file
         id: getSemver
         run: echo "::set-output name=semver::$(cat VERSION | tr -d ' \t\n\r' )"
@@ -62,6 +66,7 @@ jobs:
             VCS_REF=${{ github.sha }}
             BUILD_DATE=${{ steps.getDate.outputs.date }}
             VERSION=${{ steps.getSemver.outputs.semver }}
+          platforms: linux/386,linux/amd64,linux/arm64
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
